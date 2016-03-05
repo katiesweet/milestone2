@@ -1,0 +1,14 @@
+<% include ../head %>
+
+<ul>
+  <h1>Today I Learned...</h1>
+<% for(var i=0; i<entries.length; i++) { %>
+  <div class ="row">
+   <div class ="col-md-2"><a href='/entries/<%= i %>' ><%= entries[i].title %></a></div>
+   <div class ="col-md-1"><a href='/entries/<%= i %>/edit'>Edit</a></div>
+   <div class ="col-md-1"><a href='/entries/<%= i %>/delete'>Delete</a></div>
+ </div>
+<% } %>
+</ul>
+
+<% include ../footer %>

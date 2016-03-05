@@ -1,0 +1,16 @@
+
+<% include ../head %>
+
+<form action="/entries/<%= id %>" method='POST'>
+<label name="title">Title</label>
+<br />
+<input type="text" name="title" value="<%= entry.title %>" style="width:818px;">
+<br />
+<label name="body">Body</label>
+<br />
+<textarea rows="25" cols="100" name="body" placeholder="<%= entry.body %>"></textarea>
+<br />
+<input type="submit">
+</form>
+
+<% include ../footer %>
