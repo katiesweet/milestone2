@@ -27,7 +27,7 @@ router.post('/', function(req, res, next) {
 router.get('/:id/edit', function(req, res, next) {
   res.render('entries/update',
   {
-    title: 'Update an entry',
+    title: 'Update An Entry',
     id: req.params.id,
     entry: entries[req.params.id]
   });
@@ -38,7 +38,7 @@ router.post('/:id', function(req, res, next) {
   entries[req.params.id] = req.body;
   res.render('entries/index',
   {
-    title: 'Update an entry',
+    title: 'Update An Entry',
     entries: entries
   });
 });

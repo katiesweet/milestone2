@@ -28,3 +28,15 @@ textarea{
   font-style: normal;
   font-size: normal;
 }
+
+p{
+  padding-left: 40px;
+}
+
+h1{
+  padding-left: 40px;
+}
+
+form{
+  padding-left: 40px;
+}
