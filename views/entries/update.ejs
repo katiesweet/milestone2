@@ -1,7 +1,7 @@
 
 <% include ../head %>
 
-<form action="/entries/<%= id %>" method='POST'>
+<form action="/entries/<%= entry.id %>" method='POST'>
 <label name="title">Title</label>
 <br />
 <input type="text" name="title" value="<%= entry.title %>" style="width:818px;">

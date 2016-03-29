@@ -1,15 +1,21 @@
 var express = require('express');
 var router = express.Router();
 
-var entries = [
-  {title:"February 10, 2016", body: "Today I learned source control using Git and GitHub", created_at: "2/10/16"},
-  {title:"February 13, 2016", body: "Today I learned how to set up Heroku and use it to deploy a website",
-  created_at: "2/13/16"}
-];
+var entries = [];
 
 /* READ all: GET entries listing. */
 router.get('/', function(req, res, next) {
-  res.render('entries/index', { title: 'Today I Learned', entries: entries });
+  console.log(req.cookies.username);
+  var name = req.cookies.username || 'anonymous';
+  req.db.driver.execQuery(
+    "SELECT * FROM entries",
+    function(err, data){
+      if(err){
+        console.log(err);
+      }
+      res.render('entries/index', { title: 'Today I Learned', entries: data });
+    }
+  );
 });
 
 /* CREATE entry form: GET /entries/new */
@@ -19,41 +25,92 @@ router.get('/new', function(req, res, next) {
 
 /*CREATE entry: POST /entries/ */
 router.post('/', function(req, res, next) {
-  entries.push(req.body);
-  res.render('entries/index', { title: 'Today I Learned', entries: entries });
+  req.db.driver.execQuery(
+    "INSERT INTO entries (title,body) VALUES (?,?);",
+    [req.body.title, req.body.body],
+    function(err, data){
+      if(err)
+      {
+        console.log(err);
+      }
+
+      res.redirect(303, '/entries/');
+    }
+  );
 });
 
 /* UPDATE entry form: GET /entries/1/edit */
 router.get('/:id/edit', function(req, res, next) {
-  res.render('entries/update',
-  {
-    title: 'Update An Entry',
-    id: req.params.id,
-    entry: entries[req.params.id]
-  });
+
+  req.db.driver.execQuery(
+    'SELECT * FROM entries WHERE id=?;',
+    [parseInt(req.params.id)],
+    function(err, data){
+      if(err)
+      {
+        console.log(err);
+      }
+
+      res.render('entries/update',
+      {
+        title: 'Update an entry',
+        entry: data[0]
+      });
+    }
+  );
 });
 
 /* UPDATE entry: POST /entries/1 */
 router.post('/:id', function(req, res, next) {
-  entries[req.params.id] = req.body;
-  res.render('entries/index',
-  {
-    title: 'Update An Entry',
-    entries: entries
-  });
+  var id=parseInt(req.params.id);
+
+  req.db.driver.execQuery(
+    "UPDATE entries SET title=? ,body=? WHERE id=?;",
+    [req.body.title, req.body.body, parseInt(req.params.id)],
+    function(err, data){
+      if(err)
+      {
+        console.log(err);
+      }
+      res.redirect(303, '/entries/' + id);
+    }
+  );
+
 });
 
 /* DELETE entry: GET /entries/1/delete  */
 router.get('/:id/delete', function(req, res, next) {
-  var id = req.params.id
-  entries = entries.slice(0,id).concat(entries.slice(id+1, entries.length));
-  res.render('entries/index', { title: 'Today I Learned', entries: entries });
+  req.db.driver.execQuery(
+    'DELETE FROM entries WHERE id=?;',
+    [parseInt(req.params.id)],
+    function(err, data){
+      if(err)
+      {
+        console.log(err);
+      }
+
+      res.redirect(303, '/entries/');
+    }
+  );
 });
 
 /* THIS NEEDS TO BE LAST or /new goes here rather than where it should */
 /* READ one entry: GET /entries/0 */
 router.get('/:id', function(req, res, next) {
-  res.render('entries/entry', {title: "Today I Learned", entry: entries[req.params.id]});
+  console.log("GET entry id");
+  req.db.driver.execQuery(
+    'SELECT * FROM entries WHERE id=?;',
+    [parseInt(req.params.id)],
+    function(err, data){
+      if(err)
+      {
+        console.log(err);
+      }
+
+      res.render('entries/entry', {title: "a entry", entry: data[0]});
+    }
+  );
+
 });
 
 module.exports = router;
