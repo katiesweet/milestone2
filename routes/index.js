@@ -29,7 +29,7 @@ router.post('/login', function(req, res, next) {
 
       if(hashed_input === data[0].password) //DONT Do this is other projects!!!
       {
-        res.cookie('username', data[0].name);
+        res.cookie('username', data[0].email);
         res.redirect('/entries/');
       }
       else
@@ -39,6 +39,7 @@ router.post('/login', function(req, res, next) {
     }
   );
 });
+
 
 router.get('/logout', function(req, res){
   res.clearCookie('username');
