@@ -1,6 +1,5 @@
 var express = require('express');
 var router = express.Router();
-
 var entries = [];
 
 /* READ all: GET entries listing. */
@@ -8,12 +7,12 @@ router.get('/', function(req, res, next) {
   console.log(req.cookies.username);
   var name = req.cookies.username || 'anonymous';
   req.db.driver.execQuery(
-    "SELECT * FROM entries",
+    "SELECT * FROM entries;",
     function(err, data){
       if(err){
         console.log(err);
       }
-      res.render('entries/index', { title: 'Today I Learned', entries: data });
+      res.render('entries/index', { title: 'Today I Learned', entries: data, name:name });
     }
   );
 });
